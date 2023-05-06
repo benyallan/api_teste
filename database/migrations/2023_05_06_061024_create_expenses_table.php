@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('expenses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('requester_id')->constrained('users');
-            $table->foreignId('approver_id')->nullable()->constrained('users');
-            $table->foreignId('company_id')->constrained('companies');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('requester_id')->constrained('users');
+            $table->foreignUuid('approver_id')->nullable()->constrained('users');
+            $table->foreignUuid('company_id')->constrained('companies');
             $table->string('status');
             $table->string('description');
             $table->decimal('value', 10, 2);
