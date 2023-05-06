@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('requester_id')->constrained('users');
+            $table->foreignId('approver_id')->nullable()->constrained('users');
+            $table->foreignId('company_id')->constrained('companies');
+            $table->string('status');
             $table->string('description');
             $table->decimal('value', 10, 2);
             $table->date('date');
+            $table->date('approval_date')->nullable();
+            $table->string('reason_for_rejection')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

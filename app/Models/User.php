@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Expense::class);
     }
+
+    public function expensesToApprove(): HasMany
+    {
+        return $this->hasMany(Expense::class, 'approver');
+    }
 }

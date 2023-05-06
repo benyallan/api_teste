@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ExpenseStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,11 +17,14 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
+        $requester = \App\Models\User::factory()->create();
         return [
             'description' => $this->faker->sentence,
             'value' => $this->faker->randomFloat(2, 0, 1000),
             'date' => $this->faker->date(),
-            'user_id' => \App\Models\User::factory()->create()->id,
+            'requester_id' => $requester->id,
+            'company_id' => $requester->company->id,
+            'status' => ExpenseStatus::PENDING,
         ];
     }
 }

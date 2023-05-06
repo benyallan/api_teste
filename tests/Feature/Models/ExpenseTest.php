@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Models;
 
+use App\Enums\ExpenseStatus;
+use App\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,38 +16,43 @@ class ExpenseTest extends TestCase
 
     public function testCreateExpense()
     {
-        $user = User::factory()->create();
+        $date = now();
+        $requester = User::factory()->create();
+        $approver = User::factory()->create();
 
         $expense = Expense::factory()->create([
-            'description' => 'Test Expense',
+            'requester_id' => $requester->id,
+            'approver_id' => $approver->id,
+            'company_id' => $requester->company->id,
             'value' => 100.00,
-            'date' => '2021-01-01',
-            'user_id' => $user->id,
+            'date' => $date,
+            'status' => ExpenseStatus::REJECTED,
+            'approval_date' => $date,
+            'reason_for_rejection' => 'reason for rejection',
         ]);
 
         $this->assertNotNull($expense->id);
-        $this->assertEquals($expense->description, 'Test Expense');
+        $this->assertEquals($expense->requester_id, $requester->id);
+        $this->assertEquals($expense->approver_id, $approver->id);
+        $this->assertEquals($expense->company_id, $requester->company->id);
         $this->assertEquals($expense->value, 100.00);
-        $this->assertEquals($expense->date, '2021-01-01');
-        $this->assertEquals($expense->user_id, $user->id);
+        $this->assertEquals($expense->date, $date);
+        $this->assertEquals($expense->status, ExpenseStatus::REJECTED);
+        $this->assertNotNull($expense->approval_date);
+        $this->assertEquals($expense->reason_for_rejection, 'reason for rejection');
     }
 
     public function testUpdateExpense()
     {
-        $user = User::factory()->create();
-
         $expense = Expense::factory()->create();
 
-        $expense->description = 'New Test Expense';
-        $expense->value = 200.00;
-        $expense->date = '2021-02-02';
-        $expense->user_id = $user->id;
-        $expense->save();
+        $expense->update([
+            'value' => 200.00,
+            'status' => ExpenseStatus::APPROVED,
+        ]);
 
-        $this->assertEquals($expense->description, 'New Test Expense');
         $this->assertEquals($expense->value, 200.00);
-        $this->assertEquals($expense->date, '2021-02-02');
-        $this->assertEquals($expense->user_id, $user->id);
+        $this->assertEquals($expense->status, ExpenseStatus::APPROVED);
     }
 
     public function testDeleteExpense()
@@ -55,5 +62,26 @@ class ExpenseTest extends TestCase
         $expense->delete();
 
         $this->assertSoftDeleted($expense);
+    }
+
+    public function testApproveExpense()
+    {
+        $expense = Expense::factory()->create();
+
+        $expense->approve();
+
+        $this->assertEquals($expense->status, ExpenseStatus::APPROVED);
+        $this->assertNotNull($expense->approval_date);
+    }
+
+    public function testRejectExpense()
+    {
+        $expense = Expense::factory()->create();
+
+        $expense->reject('reason for rejection');
+
+        $this->assertEquals($expense->status, ExpenseStatus::REJECTED);
+        $this->assertNotNull($expense->approval_date);
+        $this->assertEquals($expense->reason_for_rejection, 'reason for rejection');
     }
 }
