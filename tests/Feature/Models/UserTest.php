@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Models;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -48,5 +49,17 @@ class UserTest extends TestCase
         $user->delete();
 
         $this->assertSoftDeleted($user);
+    }
+
+    public function testUserCanBelongToCompany()
+    {
+        $user = User::factory()->create();
+
+        $company = Company::factory()->create();
+
+        $user->company()->associate($company);
+        $user->save();
+
+        $this->assertEquals($user->company_id, $company->id);
     }
 }
