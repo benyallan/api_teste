@@ -3,14 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +23,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'login',
         'email',
         'password',
+        'cpf',
     ];
 
     /**
@@ -41,4 +47,35 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected function login(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Crypt::decryptString($value),
+            set: fn (string $value) => Crypt::encryptString($value),
+        );
+    }
+
+    protected function cpf(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Crypt::decryptString($value),
+            set: fn (string $value) => Crypt::encryptString($value),
+        );
+    }
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => Hash::make($value),
+        );
+    }
+
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => Crypt::decryptString($value),
+            set: fn (string $value) => Crypt::encryptString($value),
+        );
+    }
 }
