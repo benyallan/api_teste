@@ -85,9 +85,7 @@ class ExpenseControllerTest extends TestCase
         $response = $this->deleteJson(route('expenses.destroy', $expense->id));
 
         $response->assertNoContent();
-        $this->assertSoftDeleted('expenses', [
-            'id' => $expense->id,
-        ]);
+        $this->assertSoftDeleted($expense);
     }
 
     public function testCanShowExpense()

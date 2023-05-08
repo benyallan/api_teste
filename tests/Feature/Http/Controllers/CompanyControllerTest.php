@@ -26,6 +26,7 @@ class CompanyControllerTest extends TestCase
             \App\Models\User::factory()->create(),
         );
     }
+
     public function testCanCreateCompany()
     {
         $data = [
@@ -38,6 +39,10 @@ class CompanyControllerTest extends TestCase
 
         $response->assertCreated();
         $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('companies', [
+            'business_name' => $data['business_name'],
+            'corporate_name' => $data['corporate_name'],
+        ]);
     }
 
     public function testCanUpdateCompany()
@@ -53,6 +58,11 @@ class CompanyControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('companies', [
+            'id' => $company->id,
+            'business_name' => $data['business_name'],
+            'corporate_name' => $data['corporate_name'],
+        ]);
     }
 
     public function testCanDeleteCompany()

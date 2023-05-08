@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Models;
 
+use App\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Company;
 
 class CompanyTest extends TestCase
 {

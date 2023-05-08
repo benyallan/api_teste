@@ -11,6 +11,13 @@ class UserControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    const FIELDS = [
+        'id',
+        'cpf',
+        'login',
+        'email',
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -19,6 +26,7 @@ class UserControllerTest extends TestCase
             \App\Models\User::factory()->create(),
         );
     }
+
     public function testCanCreateUser()
     {
         $data = [
@@ -32,7 +40,10 @@ class UserControllerTest extends TestCase
         $response = $this->postJson(route('users.store'), $data);
 
         $response->assertCreated();
-        $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
+        $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('users', [
+            'email' => $data['email'],
+        ]);
     }
 
     public function testCanUpdateUser()
@@ -47,7 +58,11 @@ class UserControllerTest extends TestCase
         $response = $this->putJson(route('users.update', $user->id), $data);
 
         $response->assertOk();
-        $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
+        $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'email' => $data['email'],
+        ]);
     }
 
     public function testCanDeleteUser()
@@ -57,7 +72,7 @@ class UserControllerTest extends TestCase
         $response = $this->deleteJson(route('users.destroy', $user->id));
 
         $response->assertNoContent();
-        $this->assertSoftDeleted('users', ['id' => $user->id]);
+        $this->assertSoftDeleted($user);
     }
 
     public function testCanShowUser()
@@ -67,6 +82,6 @@ class UserControllerTest extends TestCase
         $response = $this->getJson(route('users.show', $user->id));
 
         $response->assertOk();
-        $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
+        $response->assertJsonStructure(self::FIELDS);
     }
 }

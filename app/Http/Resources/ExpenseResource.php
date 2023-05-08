@@ -16,9 +16,9 @@ class ExpenseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'requester' => $this->requester,
-            'approver' => $this->approver,
-            'company' => $this->company,
+            'requester' => UserResource::make($this->requester),
+            'approver' => UserResource::make($this->approver),
+            'company' => CompanyResource::make($this->company),
             'status' => $this->status,
             'description' => $this->description,
             'value' => $this->value,

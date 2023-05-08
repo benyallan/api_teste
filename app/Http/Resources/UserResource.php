@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'cpf' => $this->cpf,
             'login' => $this->login,
             'email' => $this->email,
+            'company' => CompanyResource::make($this->company),
         ];
     }
 }

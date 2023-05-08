@@ -92,7 +92,7 @@ class User extends Authenticatable
         return $this->hasMany(Expense::class);
     }
 
-    public function expensesToApprove(): HasMany
+    public function expensesApproved(): HasMany
     {
         return $this->hasMany(Expense::class, 'approver');
     }

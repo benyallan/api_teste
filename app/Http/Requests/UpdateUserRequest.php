@@ -11,7 +11,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -22,9 +22,9 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cpf' => ['required', 'string', 'max:14', 'unique:users,cpf,' . $this->user->id],
-            'login' => ['required', 'string', 'max:255', 'unique:users,login,' . $this->user->id],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user->id],
+            'cpf' => ['required', 'string', 'max:14', 'unique:users,cpf,'.$this->user->id],
+            'login' => ['required', 'string', 'max:255', 'unique:users,login,'.$this->user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$this->user->id],
         ];
     }
 }

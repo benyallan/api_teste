@@ -18,6 +18,7 @@ class ExpenseFactory extends Factory
     public function definition(): array
     {
         $requester = \App\Models\User::factory()->create();
+
         return [
             'description' => $this->faker->sentence,
             'value' => $this->faker->randomFloat(2, 0, 1000),

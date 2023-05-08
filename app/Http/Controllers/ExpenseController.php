@@ -62,6 +62,6 @@ class ExpenseController extends Controller
     {
         $expense->delete();
 
-        return response()->json(null, 204);
+        return response()->noContent();
     }
 }
