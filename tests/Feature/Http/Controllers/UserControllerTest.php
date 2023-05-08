@@ -11,7 +11,7 @@ class UserControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function testIfCreateUser()
+    public function testCanCreateUser()
     {
         Sanctum::actingAs(
             \App\Models\User::factory()->create(),
@@ -27,6 +27,50 @@ class UserControllerTest extends TestCase
         $response = $this->postJson(route('users.store'), $data);
 
         $response->assertCreated();
+        $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
+    }
+
+    public function testCanUpdateUser()
+    {
+        Sanctum::actingAs(
+            \App\Models\User::factory()->create(),
+        );
+        $user = \App\Models\User::factory()->create();
+        $data = [
+            'cpf' => $this->faker->cpf,
+            'login' => $this->faker->userName,
+            'email' => $this->faker->email,
+        ];
+
+        $response = $this->putJson(route('users.update', $user->id), $data);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
+    }
+
+    public function testCanDeleteUser()
+    {
+        Sanctum::actingAs(
+            \App\Models\User::factory()->create(),
+        );
+        $user = \App\Models\User::factory()->create();
+
+        $response = $this->deleteJson(route('users.destroy', $user->id));
+
+        $response->assertNoContent();
+        $this->assertSoftDeleted('users', ['id' => $user->id]);
+    }
+
+    public function testCanShowUser()
+    {
+        Sanctum::actingAs(
+            \App\Models\User::factory()->create(),
+        );
+        $user = \App\Models\User::factory()->create();
+
+        $response = $this->getJson(route('users.show', $user->id));
+
+        $response->assertOk();
         $response->assertJsonStructure(['id', 'cpf', 'login', 'email']);
     }
 }
