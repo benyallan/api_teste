@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ExpenseStatus;
+use App\Http\Requests\RejectExpenseRequest;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseResource;
@@ -63,5 +64,34 @@ class ExpenseController extends Controller
         $expense->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Approve the specified resource from storage.
+     */
+    public function approve(Expense $expense)
+    {
+        $expense->update([
+            'approver_id' => auth()->user()->id,
+            'status' => ExpenseStatus::APPROVED,
+            'approval_date' => now(),
+        ]);
+
+        return response()->json(new ExpenseResource($expense));
+    }
+
+    /**
+     * Reject the specified resource from storage.
+     */
+    public function reject(RejectExpenseRequest $request, Expense $expense)
+    {
+        $expense->update([
+            'approver_id' => auth()->user()->id,
+            'status' => ExpenseStatus::REJECTED,
+            'approval_date' => now(),
+            'reason_for_rejection' => $request->validated()['reason_for_rejection'],
+        ]);
+
+        return response()->json(new ExpenseResource($expense));
     }
 }

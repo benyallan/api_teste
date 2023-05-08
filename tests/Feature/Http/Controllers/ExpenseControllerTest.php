@@ -97,4 +97,37 @@ class ExpenseControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure(self::FIELDS);
     }
+
+    public function testCanApproveExpense()
+    {
+        $expense = \App\Models\Expense::factory()->create();
+
+        $response = $this->postJson(route('expenses.approve', $expense->id));
+
+        $response->assertOk();
+        $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('expenses', [
+            'id' => $expense->id,
+            'status' => \App\Enums\ExpenseStatus::APPROVED,
+        ]);
+    }
+
+    public function testCanRejectExpense()
+    {
+        $expense = \App\Models\Expense::factory()->create();
+
+        $response = $this->postJson(
+            route('expenses.reject', $expense->id),
+            [
+                'reason_for_rejection' => $this->faker->sentence,
+            ]
+        );
+
+        $response->assertOk();
+        $response->assertJsonStructure(self::FIELDS);
+        $this->assertDatabaseHas('expenses', [
+            'id' => $expense->id,
+            'status' => \App\Enums\ExpenseStatus::REJECTED,
+        ]);
+    }
 }

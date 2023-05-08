@@ -39,4 +39,12 @@ Route::middleware('auth:sanctum')->group(function () {
         \App\Http\Controllers\ExpenseController::class,
         ['except' => ['create', 'edit']]
     );
+    Route::post(
+        'expenses/{expense}/approve',
+        [\App\Http\Controllers\ExpenseController::class, 'approve']
+    )->name('expenses.approve');
+    Route::post(
+        'expenses/{expense}/reject',
+        [\App\Http\Controllers\ExpenseController::class, 'reject']
+    )->name('expenses.reject');
 });
