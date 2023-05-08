@@ -26,3 +26,8 @@ Route::apiResource(
 
 Route::post('login', [\App\Http\Controllers\Auth\AuthController::class, 'store'])
     ->name('login');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [\App\Http\Controllers\Auth\AuthController::class, 'destroy'])
+        ->name('logout');
+});

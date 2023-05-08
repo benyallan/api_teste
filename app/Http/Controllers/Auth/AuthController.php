@@ -51,10 +51,10 @@ class AuthController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the current resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $request->user()->currentAccessToken()->delete();
     }
 }

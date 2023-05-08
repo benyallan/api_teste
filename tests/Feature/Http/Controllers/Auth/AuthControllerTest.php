@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\URL;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -49,5 +50,21 @@ class AuthControllerTest extends TestCase
 
         $response->assertUnauthorized()
             ->assertJsonStructure(['message']);
+    }
+
+    /**
+     * Test if a user can logout.
+     *
+     * @return void
+     */
+    public function testUserCanLogout()
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+        );
+
+        $response = $this->post('/api/logout');
+
+        $response->assertOk();
     }
 }
