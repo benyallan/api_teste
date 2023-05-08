@@ -29,4 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
         \App\Http\Controllers\UserController::class,
         ['except' => ['create', 'edit']]
     );
+    Route::apiResource(
+        'companies',
+        \App\Http\Controllers\CompanyController::class,
+        ['except' => ['create', 'edit']]
+    );
 });
