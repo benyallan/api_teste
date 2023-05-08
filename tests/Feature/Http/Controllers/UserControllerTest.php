@@ -11,11 +11,16 @@ class UserControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function testCanCreateUser()
+    public function setUp(): void
     {
+        parent::setUp();
+
         Sanctum::actingAs(
             \App\Models\User::factory()->create(),
         );
+    }
+    public function testCanCreateUser()
+    {
         $data = [
             'cpf' => $this->faker->cpf,
             'login' => $this->faker->userName,
@@ -32,9 +37,6 @@ class UserControllerTest extends TestCase
 
     public function testCanUpdateUser()
     {
-        Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
-        );
         $user = \App\Models\User::factory()->create();
         $data = [
             'cpf' => $this->faker->cpf,
@@ -50,9 +52,6 @@ class UserControllerTest extends TestCase
 
     public function testCanDeleteUser()
     {
-        Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
-        );
         $user = \App\Models\User::factory()->create();
 
         $response = $this->deleteJson(route('users.destroy', $user->id));
@@ -63,9 +62,6 @@ class UserControllerTest extends TestCase
 
     public function testCanShowUser()
     {
-        Sanctum::actingAs(
-            \App\Models\User::factory()->create(),
-        );
         $user = \App\Models\User::factory()->create();
 
         $response = $this->getJson(route('users.show', $user->id));
