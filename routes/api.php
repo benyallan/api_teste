@@ -18,16 +18,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource(
-    'users',
-    \App\Http\Controllers\UserController::class,
-    ['except' => ['create', 'edit']]
-);
-
 Route::post('login', [\App\Http\Controllers\Auth\AuthController::class, 'store'])
     ->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [\App\Http\Controllers\Auth\AuthController::class, 'destroy'])
         ->name('logout');
+    Route::apiResource(
+        'users',
+        \App\Http\Controllers\UserController::class,
+        ['except' => ['create', 'edit']]
+    );
 });
