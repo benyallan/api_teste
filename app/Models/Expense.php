@@ -14,9 +14,9 @@ class Expense extends Model
     use HasFactory, SoftDeletes, HasUuids;
 
     protected $fillable = [
-        'requester',
-        'approver',
-        'company',
+        'requester_id',
+        'approver_id',
+        'company_id',
         'status',
         'description',
         'value',
@@ -28,6 +28,10 @@ class Expense extends Model
     protected $dates = [
         'date',
         'approval_date',
+    ];
+
+    protected $casts = [
+        'status' => ExpenseStatus::class,
     ];
 
     public function company(): BelongsTo

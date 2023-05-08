@@ -34,4 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
         \App\Http\Controllers\CompanyController::class,
         ['except' => ['create', 'edit']]
     );
+    Route::apiResource(
+        'expenses',
+        \App\Http\Controllers\ExpenseController::class,
+        ['except' => ['create', 'edit']]
+    );
 });
