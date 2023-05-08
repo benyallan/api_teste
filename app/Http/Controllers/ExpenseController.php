@@ -6,11 +6,8 @@ use App\Enums\ExpenseStatus;
 use App\Http\Requests\RejectExpenseRequest;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
-use App\Http\Resources\Expense as ExpenseCollection;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
@@ -74,11 +71,7 @@ class ExpenseController extends Controller
      */
     public function approve(Expense $expense)
     {
-        $expense->update([
-            'approver_id' => auth()->user()->id,
-            'status' => ExpenseStatus::APPROVED,
-            'approval_date' => now(),
-        ]);
+        $expense->approve();
 
         return response()->json(new ExpenseResource($expense));
     }
@@ -88,12 +81,7 @@ class ExpenseController extends Controller
      */
     public function reject(RejectExpenseRequest $request, Expense $expense)
     {
-        $expense->update([
-            'approver_id' => auth()->user()->id,
-            'status' => ExpenseStatus::REJECTED,
-            'approval_date' => now(),
-            'reason_for_rejection' => $request->validated()['reason_for_rejection'],
-        ]);
+        $expense->reject($request->validated()['reason_for_rejection']);
 
         return response()->json(new ExpenseResource($expense));
     }

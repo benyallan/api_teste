@@ -32,7 +32,8 @@ class ExpenseFactory extends Factory
 
     /**
      * Create for a specific user.
-     * @param array<string, mixed> $attributes
+     *
+     * @param  array<string, mixed>  $attributes
      */
     public function forUser(User $user): self
     {

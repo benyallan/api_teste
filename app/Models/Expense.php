@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ExpenseStatus;
+use App\Notifications\ExpenseApprovedNotification;
+use App\Notifications\ExpenseRejectedNotification;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -70,6 +72,7 @@ class Expense extends Model
         $this->approval_date = now();
         $this->approver()->associate(auth()->user());
         $this->save();
+        $this->requester->notify(new ExpenseApprovedNotification($this));
     }
 
     public function reject(string $reason): void
@@ -79,5 +82,6 @@ class Expense extends Model
         $this->approval_date = now();
         $this->approver()->associate(auth()->user());
         $this->save();
+        $this->requester->notify(new ExpenseRejectedNotification($this));
     }
 }
