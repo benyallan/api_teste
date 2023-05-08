@@ -74,13 +74,13 @@ class User extends Authenticatable
         );
     }
 
-    protected function email(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => Crypt::decryptString($value),
-            set: fn (string $value) => Crypt::encryptString($value),
-        );
-    }
+    // protected function email(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (string $value) => Crypt::decryptString($value),
+    //         set: fn (string $value) => Crypt::encryptString($value),
+    //     );
+    // }
 
     public function company(): BelongsTo
     {

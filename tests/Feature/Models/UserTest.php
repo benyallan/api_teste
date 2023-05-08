@@ -25,6 +25,7 @@ class UserTest extends TestCase
         $this->assertEquals($user->email, 'test@example.com');
         $this->assertEquals($user->login, 'test');
         $this->assertNotEquals($user->password, 'password');
+        $this->assertTrue(password_verify('password', $user->password));
         $this->assertEquals($user->cpf, '12345678900');
     }
 
