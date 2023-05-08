@@ -6,8 +6,11 @@ use App\Enums\ExpenseStatus;
 use App\Http\Requests\RejectExpenseRequest;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Resources\Expense as ExpenseCollection;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
@@ -16,7 +19,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(ExpenseResource::collection(Expense::all()));
     }
 
     /**

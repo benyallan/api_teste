@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\ExpenseStatus;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,5 +28,17 @@ class ExpenseFactory extends Factory
             'company_id' => $requester->company->id,
             'status' => ExpenseStatus::PENDING,
         ];
+    }
+
+    /**
+     * Create for a specific user.
+     * @param array<string, mixed> $attributes
+     */
+    public function forUser(User $user): self
+    {
+        return $this->state([
+            'requester_id' => $user->id,
+            'company_id' => $user->company->id,
+        ]);
     }
 }

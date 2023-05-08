@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\ExpenseCollection;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
         \App\Http\Controllers\UserController::class,
         ['except' => ['create', 'edit']]
     );
+    Route::get(
+        'users/{user}/expenses',
+        [\App\Http\Controllers\UserController::class, 'expenses']
+    )->name('users.expenses');
     Route::apiResource(
         'companies',
         \App\Http\Controllers\CompanyController::class,

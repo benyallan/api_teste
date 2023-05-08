@@ -84,4 +84,18 @@ class UserControllerTest extends TestCase
         $response->assertOk();
         $response->assertJsonStructure(self::FIELDS);
     }
+
+    public function testGetAllExpensesForUser()
+    {
+        $user = \App\Models\User::factory()->create();
+        $expenses = \App\Models\Expense::factory()
+            ->count(3)
+            ->forUser($user)
+            ->create();
+
+        $response = $this->getJson(route('users.expenses', $user->id));
+
+        $response->assertOk();
+        $response->assertJsonCount(3);
+    }
 }

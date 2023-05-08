@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -129,5 +131,21 @@ class ExpenseControllerTest extends TestCase
             'id' => $expense->id,
             'status' => \App\Enums\ExpenseStatus::REJECTED,
         ]);
+    }
+
+    public function testCanListExpenses()
+    {
+        \App\Models\Expense::factory()
+            ->count(3)
+            ->forUser(Auth::user())
+            ->create();
+
+        $response = $this->getJson(route('expenses.index'));
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            '*' => self::FIELDS,
+        ]);
+        $response->assertJsonCount(3);
     }
 }

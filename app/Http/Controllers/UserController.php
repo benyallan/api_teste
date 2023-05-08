@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\ExpenseResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -53,5 +54,10 @@ class UserController extends Controller
         $user->delete();
 
         return response()->noContent();
+    }
+
+    public function expenses(User $user)
+    {
+        return response()->json(ExpenseResource::collection($user->expenses));
     }
 }
