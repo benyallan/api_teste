@@ -37,7 +37,7 @@ class ExpenseRejectedNotification extends Notification
             ->subject('Despesa rejeitada')
             ->greeting('Olá!')
             ->line('Sua despesa foi rejeitada.')
-            ->line('Motivo: ' . $notifiable->reason_for_rejection);
+            ->line('Motivo: '.$notifiable->reason_for_rejection);
     }
 
     /**
