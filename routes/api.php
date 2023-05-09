@@ -51,4 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
         'expenses/{expense}/reject',
         [\App\Http\Controllers\ExpenseController::class, 'reject']
     )->name('expenses.reject');
+    Route::patch('users/{user}/{company}/associate', [\App\Http\Controllers\UserController::class, 'addCompany'])
+        ->name('users.companies.associate');
 });

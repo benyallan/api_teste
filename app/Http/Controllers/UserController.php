@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\ExpenseResource;
 use App\Http\Resources\UserResource;
+use App\Models\Company;
 use App\Models\User;
 
 class UserController extends Controller
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(UserResource::collection(User::all()));
     }
 
     /**
@@ -59,5 +60,12 @@ class UserController extends Controller
     public function expenses(User $user)
     {
         return response()->json(ExpenseResource::collection($user->expenses));
+    }
+
+    public function addCompany(User $user, Company $company)
+    {
+        $user->company()->associate($company);
+
+        return response()->json(new UserResource($user));
     }
 }

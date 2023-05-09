@@ -14,7 +14,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(CompanyResource::collection(Company::all()));
     }
 
     /**
